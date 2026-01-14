@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify
 from models.unit import Unit
+from flask_jwt_extended import jwt_required
+from utils.auth import role_required
 
 units_bp = Blueprint("units", __name__, url_prefix="/units")
 
@@ -20,6 +22,8 @@ def get_units():
     ])
 
 @units_bp.route("/entry", methods=["POST"])
+@role_required("ADMIN")
+@jwt_required()
 def create_unit():
     from flask import request
     from extensions import db

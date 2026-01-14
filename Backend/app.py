@@ -27,7 +27,7 @@ def create_app():
 
     @app.route("/health")
     def health():
-        return jsonify({"status": "ok"})
+        return jsonify({"status": "Backend is running"})
 
     return app
 

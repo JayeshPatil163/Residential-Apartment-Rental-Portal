@@ -2,7 +2,7 @@
 Kots world Mini Project : Residential Apartment Rental Portal
 
 
-# Residential Apartment Rental Portal – Backend
+# Backend
 
 This repository contains the **backend implementation** for a Residential Apartment Rental Portal.  
 The system allows users to browse apartments, view amenities, request bookings, and allows admins to manage units, amenities, and booking approvals.
@@ -47,25 +47,22 @@ Frontend (Angular) will be integrated in later phases.
 
 ## Project Structure
 
-backend/
-├── app.py
-├── config.py
-├── extensions.py
-├── auth/
-├── admin/
-├── bookings/
-├── units/
-├── amenities/
-├── models/
-├── utils/
-├── seed.py
-├── requirements.txt
-└── Dockerfile
+backend/\
+├── app.py\
+├── config.py\
+├── extensions.py\
+├── auth/\
+├── admin/\
+├── bookings/\
+├── units/\
+├── amenities/\
+├── models/\
+├── utils/\
+├── seed.py\
+├── requirements.txt\
+└── Dockerfile\
 
 docker-compose.yml
-
-yaml
-Copy code
 
 ---
 
@@ -78,92 +75,93 @@ Copy code
 ### Start the backend
 ```bash
 docker-compose up --build
+```
 Backend will be available at:
 
-arduino
-Copy code
+```
 http://localhost:5000
+```
 Health check:
 
-bash
-Copy code
+```bash
 GET /health
-Database Setup (First Run Only)
+```
+### Database Setup (First Run Only)
 Create database tables:
 
-bash
-Copy code
+```bash
 docker exec -it renteasy_backend python
-python
-Copy code
+
 from app import create_app
 from extensions import db
 
 app = create_app()
 with app.app_context():
     db.create_all()
+```
 Exit the shell once done.
 
-Optional: Seed Demo Data
+### Optional: Seed Demo Data
 To quickly populate the database with demo data (admin user, units, amenities):
 
-bash
-Copy code
+```bash
 docker exec -it renteasy_backend python seed.py
+```
 Seeded Admin Credentials
-makefile
-Copy code
+```
 Email: admin@test.com
 Password: admin123
-Authentication Overview
-JWT-based stateless authentication
+```
+---
+## Authentication Overview
+- JWT-based stateless authentication
 
-Public registration creates USER role only
+- Public registration creates USER role only
 
-ADMIN users are created internally (seed / DB) to prevent privilege escalation
+- ADMIN users are created internally (seed / DB) to prevent privilege escalation
 
-JWT contains user identity and role claims
+- JWT contains user identity and role claims
 
-API Overview (Backend)
-Auth
-POST /auth/register
+----
 
-POST /auth/login
+## API Overview (Backend)
 
-Units
-GET /units
+### Auth
+`POST /auth/register`
+<br/>
+`POST /auth/login`
+### Units
+`GET /units`
+### Amenities
+`GET /amenities`
+<br/>
+`POST /amenities (ADMIN)`
+### Bookings
+`POST /bookings (USER)`
+<br/>
+`GET /bookings (USER)`
+<br/>
+`GET /admin/bookings (ADMIN)`
+<br/>
+`POST /admin/bookings/{id}/approve (ADMIN)`
 
-Amenities
-GET /amenities
+## Security Notes
+- Passwords are stored as secure hashes
 
-POST /amenities (ADMIN)
+- Admin role cannot be assigned via public APIs
 
-Bookings
-POST /bookings (USER)
+- Role-based access enforced at API level
 
-GET /bookings (USER)
+## Frontend Integration (Planned)
+- Angular User Portal
 
-GET /admin/bookings (ADMIN)
+- Angular Admin Portal
 
-POST /admin/bookings/{id}/approve (ADMIN)
+- API integration with this backend
 
-Security Notes
-Passwords are stored as secure hashes
-
-Admin role cannot be assigned via public APIs
-
-Role-based access enforced at API level
-
-Frontend Integration (Planned)
-Angular User Portal
-
-Angular Admin Portal
-
-API integration with this backend
-
-UI for booking flow and admin management
+- UI for booking flow and admin management
 
 README will be updated once frontend is integrated.
 
-Author
+# Author
 Jayesh Patil

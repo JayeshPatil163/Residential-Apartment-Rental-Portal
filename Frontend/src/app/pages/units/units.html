@@ -1,0 +1,18 @@
+<h1> Available Units </h1>
+
+<div *ngFor = "let unit of units" class="unit-card">
+    <h3> {{ unit.unit_number }} </h3>
+    <p> Rent: ${{ unit.rent }} per month </p>
+    <p> Unit Status : {{ unit.is_available ? 'Available' : 'Booked' }} </p>
+
+    <div *ngIf="unit.amenities?.length">
+        <strong>Amenities:</strong>
+        <ul>
+            <li *ngFor="let amenity of unit.amenities">
+                {{ amenity }}
+            </li>
+        </ul>
+    </div>
+
+    <button (click)="bookUnit(unit.id)" [disabled] = "!unit.is_available"> Book Now </button>
+</div>

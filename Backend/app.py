@@ -10,12 +10,19 @@ from auth.routes import auth_bp
 from units.routes import units_bp
 from bookings.routes import bookings_bp
 from admin.routes import admin_bp
+from amenity.routes import amenity_bp
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    CORS(app)
+    CORS(app, origins=["http://localhost:4200"])
+
+
     db.init_app(app)
+
     with app.app_context():
         db.create_all()
     jwt.init_app(app)
@@ -24,6 +31,7 @@ def create_app():
     app.register_blueprint(units_bp)
     app.register_blueprint(bookings_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(amenity_bp)
 
     @app.route("/health")
     def health():
@@ -34,4 +42,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

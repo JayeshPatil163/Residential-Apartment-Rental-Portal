@@ -18,7 +18,11 @@ def create_app():
     app.config.from_object(Config)
 
     CORS(app)
-    CORS(app, origins=["http://localhost:4200"])
+    CORS(
+        app,
+        origins=["http://localhost:4200"],
+        supports_credentials=True
+    )
 
 
     db.init_app(app)

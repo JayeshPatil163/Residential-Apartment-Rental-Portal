@@ -5,6 +5,7 @@ from models.unit import Unit
 from models.unit_amenities import UnitAmenity
 from models.amenity import Amenity
 from utils.auth import role_required
+from models.user import User
 from extensions import db
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -15,13 +16,13 @@ admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 def get_all_bookings():
    
    bookings = Booking.query.all()
-
    return jsonify([
       {
          "id": b.id,
-         "unit_id": b.unit_id,
-         "user_id": b.user_id,
-         "status": b.status
+         "unit_id": Unit.query.get(b.unit_id).unit_number,
+         "user_id": User.query.get(b.user_id).name,
+         "status": b.status,
+         "created_at": b.created_at,
       } for b in bookings
    ])
 

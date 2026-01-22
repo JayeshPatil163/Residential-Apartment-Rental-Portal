@@ -15,6 +15,6 @@ export class BookingService {
   }
 
   getBookings() {
-    return this.http.get(`${this.api}/bookings`);
+    return this.http.get<any[]>(`${this.api}/bookings`);
   }
 }

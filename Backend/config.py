@@ -6,5 +6,6 @@ class Config:
         "DATABASE_URL",
         "postgresql://postgres:postgres@db:5432/renteasy" # Started with SQLite locally
     )
+    URL = os.getenv("URL", "http://localhost:4200")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwt-secret")

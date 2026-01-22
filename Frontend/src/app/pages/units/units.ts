@@ -2,6 +2,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { UnitsService } from '../../services/units';
 import { BookingService } from '../../services/bookings';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-units',
@@ -11,7 +12,7 @@ import { BookingService } from '../../services/bookings';
   standalone: true,
 })
 export class Units {
-    units: any[] = [];
+    units$!: Observable<any[]>;
     platformId = inject(PLATFORM_ID);
 
     constructor(
@@ -21,27 +22,14 @@ export class Units {
     ) {}
 
     ngOnInit() {
-      this.unitService.getUnits().subscribe({
-        next: (res: any) => {
-            this.units = res;
-            this.cdr.detectChanges();
-        },
-        error: () => {
-          if(isPlatformBrowser(this.platformId)) {
-            alert('Failed to fetch units. Please try again.');
-          }
-      }
-    });
+      this.units$ = this.unitService.getUnits()
     }
 
     bookUnit(id: any) {
       this.bookingService.createBooking({ unit_id: id }).subscribe({
         next: (res: any) => {
           alert('Booking successful!');
-          this.unitService.getUnits().subscribe({
-            next: (res: any) => {
-                this.units = res;
-            }});
+          this.units$ = this.unitService.getUnits();
         },
         error: () => {
           if(isPlatformBrowser(this.platformId)) {

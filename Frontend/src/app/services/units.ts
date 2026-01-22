@@ -9,6 +9,6 @@ export class UnitsService {
     constructor(private http: HttpClient) {}
 
     getUnits() {
-        return this.http.get(`${this.api}/units`);
+        return this.http.get<any[]>(`${this.api}/units`);
     }
 }

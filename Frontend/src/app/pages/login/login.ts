@@ -24,7 +24,9 @@ export class Login {
         password : this.password
       }).subscribe({
         next: (res: any) => {
+          console.log(res.access_token);
           this.auth.setToken(res.access_token);
+          this.router.navigate(['/units']);
         },
         error: () => {
           alert('Login failed. Please check your credentials.');

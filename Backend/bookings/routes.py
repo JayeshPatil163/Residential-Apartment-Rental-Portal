@@ -18,7 +18,8 @@ def get_bookings():
         {
             "id": b.id,
             "unit_id": b.unit_id,
-            "status": b.status
+            "status": b.status,
+            "created_at": b.created_at
         } for b in bookings
     ])
 

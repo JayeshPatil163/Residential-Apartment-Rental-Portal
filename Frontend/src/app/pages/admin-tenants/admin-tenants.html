@@ -1,0 +1,28 @@
+<h1>Tenants</h1>
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Tower</th>
+                <th>Unit Number</th>
+                <th>User Name</th>
+                <th>Rent Status</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let booking of bookings$ | async">
+                <td>{{ booking.tower }}</td>
+                <td>{{ booking.unit_id }}</td>
+                <td>{{ booking.user_id }}</td>
+                <td>{{ booking.payment_status }}</td>
+                <td>{{ booking.created_at }}</td>
+                <td>
+                    <button (click)="collectRent(booking.id)">Collect Rent</button>
+                    <button (click)="terminate(booking.id)">Terminate</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -10,11 +10,12 @@ import { AsyncPipe, CommonModule } from '@angular/common';
   styleUrl: './admin-bookings.css',
 })
 export class AdminBookings {
-  bookings$! : Observable<any[]>;
+  bookings$!: Observable<any[]>;
+
 
   constructor(
     private adminBookingService: adminBookingService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.bookings$ = this.adminBookingService.getAllBookings();
@@ -25,9 +26,23 @@ export class AdminBookings {
       next: (res: any) => {
         alert('Booking approved successfully.');
         this.bookings$ = this.adminBookingService.getAllBookings();
+        window.location.reload();
       },
       error: () => {
         alert('Failed to approve booking. Please try again.');
+      }
+    });
+  }
+
+  declineBooking(id: any) {
+    this.adminBookingService.declineBooking(id).subscribe({
+      next: (res: any) => {
+        alert('Booking declined successfully.');
+        this.bookings$ = this.adminBookingService.getAllBookings();
+        window.location.reload();
+      },
+      error: () => {
+        alert('Failed to decline booking. Please try again.');
       }
     });
   }

@@ -1,0 +1,23 @@
+<h1> Admin Amenities </h1>
+
+<div *ngIf="amenities$ | async as amenities">
+    <div *ngIf="amenities.length === 0">
+      <p>No amenities found.</p>
+    </div>
+
+    <p><strong>No.</strong>Amenity Name </p>
+    <div *ngFor="let amenity of amenities$ | async" class="amenity-card">
+      <p><strong>{{ amenity.id }}</strong> {{ amenity.name }} </p>
+    </div>
+    <button [disabled]="showPopup" (click)="showPopup = true">Add Amenity</button>
+
+    <div *ngIf="showPopup">
+      <div class="popup-content">
+        <h3>Add New Amenity</h3>
+        <input [(ngModel)]="newAmenityName" placeholder="Amenity Name">
+
+        <button (click)="addAmenity(newAmenityName)">Save</button>
+        <button (click)="showPopup = false">Cancel</button>
+      </div>
+    </div>
+</div>

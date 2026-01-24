@@ -1,0 +1,69 @@
+<h1> Admin Units </h1>
+
+<div *ngFor="let unit of units$ | async" class="unit-card">
+  <h3> {{ unit.unit_number }} </h3>
+  <p> Tower : {{ unit.tower.name }} </p>
+  <p> Rent: ${{ unit.rent }} per month </p>
+  <p> Unit Status : {{ unit.is_available ? 'Available' : 'Booked' }} </p>
+
+  <div *ngIf="unit.amenities?.length">
+    <strong>Amenities:</strong>
+    <ul>
+      <li *ngFor="let amenity of unit.amenities">
+        {{ amenity.name }}
+      </li>
+    </ul>
+  </div>
+
+  <button (click)="toggleUnitId(unit)">
+    {{ selectedUnit === unit.id ? 'Close' : 'Add Amenities' }}
+  </button>
+
+  <div *ngIf="selectedUnit === unit.id">
+    <div class="amenities-container">
+      <label>Select Amenities:</label>
+      <div class="checkbox-group">
+        <div *ngFor="let amenity of amenities$ | async" class="amenity-item">
+          <input type="checkbox" [id]="'amenity-' + amenity.id" [value]="amenity.id"
+            [checked]="isAmenitySelected(unit, amenity.name)" (change)="onAmenityToggle(amenity.id, $event)">
+          <label [for]="'amenity-' + amenity.id">{{ amenity.name }}</label>
+        </div>
+      </div>
+    </div>
+    <button (click)="updateAmenities(unit.id)">Update</button>
+  </div>
+</div>
+
+<button [disabled]="showPopup" (click)="showPopup = true">Add Unit</button>
+
+<div *ngIf="showPopup">
+  <form (ngSubmit)="addUnit()">
+    <input type="text" placeholder="Enter unit number" [(ngModel)]="unit_number" name="unit_number" required />
+
+    <input type="number" placeholder="No. of bedrooms" [(ngModel)]="bedrooms" name="bedrooms" required />
+
+    <input type="number" placeholder="Enter rent amount" [(ngModel)]="rent" name="rent" required />
+
+    <div class="form-group" *ngIf="towers$ | async as towers">
+      <label>Select Tower:</label>
+      <select [(ngModel)]="selectedTowerId" name="tower" required>
+        <option [ngValue]="null" disabled>Select Tower</option>
+        <option *ngFor="let tower of towers" [ngValue]="tower.id">{{ tower.name }}</option>
+      </select>
+    </div>
+
+    <div class="amenities-container">
+      <label>Select Amenities:</label>
+      <div class="checkbox-group">
+        <div *ngFor="let amenity of amenities$ | async" class="amenity-item">
+          <input type="checkbox" [id]="'amenity-' + amenity.id" [value]="amenity.id"
+            (change)="onAmenityToggle(amenity.id, $event)">
+          <label [for]="'amenity-' + amenity.id">{{ amenity.name }}</label>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit"> Add Unit </button>
+
+  </form>
+</div>

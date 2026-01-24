@@ -3,11 +3,12 @@
 <div *ngIf="bookings$ | async as bookings">
     <div *ngIf="bookings.length === 0">
         <p>No bookings yet.</p>
-</div>
+    </div>
 
-<div *ngFor="let booking of bookings$ | async" class="booking-card">
-    <h3><strong>Unit: </strong> {{ booking.unit_id }} </h3>
-    <p><strong>Status: </strong> 
-        <span [style.color] = "booking.status === 'APPROVED' ? 'green' : 'orange'">{{ booking.status }}</span></p>
-    <p> Created At : {{ booking.created_at }} </p>
-</div>
+    <div *ngFor="let booking of bookings$ | async" class="booking-card">
+        <h3><strong>Unit: </strong> {{ booking.unit_number }} </h3>
+        <p><strong>Status: </strong>
+            <span [style.color]="booking.status === 'APPROVED' ? 'green' : booking.status === 'PENDING' ? 'orange' : 'red'">{{ booking.status }}</span>
+        </p>
+        <p> Created At : {{ booking.created_at }} </p>
+    </div>

@@ -10,17 +10,34 @@ export class adminBookingService {
 
   constructor(private http: HttpClient) {}
 
-  getAllBookings() {
-    return this.http.get<any[]>(`${this.api}/admin/bookings`);
+  getAllBookings(status?: string) {
+    if (!status) {
+      return this.http.get<any[]>(`${this.api}/admin/bookings`);
+    }
+    return this.http.get<any[]>(`${this.api}/admin/bookings?status=${status}`);
   }
 
-  approveBooking(id: any) {
-    return this.http.post(`${this.api}/admin/bookings/${id}/approve`, {});
+  approveBooking(id: any, rent?: string) {
+    if (!rent) {
+      return this.http.post(`${this.api}/admin/bookings/${id}/approve`, {});
+    }
+    return this.http.post(`${this.api}/admin/bookings/${id}/approve?rent=${rent}`, {});
   }
 
-  addAmenityToUnit(unitId: any, amenityId: any[]) {
-    return this.http.post(`${this.api}/units/${unitId}/amenities`, {
-      amenity_id: amenityId
+  declineBooking(id: any, action?: string) {
+    if (!action) {
+      return this.http.post(`${this.api}/admin/bookings/${id}/decline`, {});
+    }
+    return this.http.post(`${this.api}/admin/bookings/${id}/decline?action=${action}`, {});
+  }
+
+  addAmenityToUnit(unit_id: any, amenityId: any[]) {
+    return this.http.post(`${this.api}/admin/units/${unit_id}/amenities`, {
+      amenity_ids: amenityId
     });
+  }
+
+  getDashboardStats() {
+    return this.http.get<any>(`${this.api}/admin/dashboard-stats`);
   }
 }

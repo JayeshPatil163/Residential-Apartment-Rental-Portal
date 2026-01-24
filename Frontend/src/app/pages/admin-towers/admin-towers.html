@@ -1,0 +1,36 @@
+<h1> Admin Towers </h1>
+
+<div *ngIf="towers$ | async as towers">
+    <div *ngIf="towers.length === 0">
+        <p>No towers found.</p>
+    </div>
+
+    <div *ngFor="let tower of towers" class="tower-card" (click)="viewUnits(tower.id)" [class.selected]="selectedTowerId === tower.id">
+        <p><strong>{{ tower.id }}.</strong> {{ tower.name }} </p>
+
+        <div *ngIf="selectedTowerId === tower.id">
+            <hr>
+            <h4>Units in {{ tower.name }}</h4>
+            <div *ngIf="selectedTowerUnits$ | async as units; else loading">
+                 <div *ngIf="units.length === 0">No units in this tower.</div>
+                 <div *ngFor="let unit of units" class="unit-item">
+                     Unit {{ unit.unit_number }} - {{ unit.bedrooms }}BHK - ${{ unit.rent }}
+                 </div>
+            </div>
+            <ng-template #loading>Loading units...</ng-template>
+        </div>
+    </div>
+</div>
+
+<button [disabled]="showPopup" (click)="showPopup = true">Add Tower</button>
+
+<div *ngIf="showPopup" class="popup">
+    <div class="popup-content">
+        <h3>Add New Tower</h3>
+        <input [(ngModel)]="newTowerName" placeholder="Tower Name">
+        <div class="actions">
+            <button (click)="addTower()">Save</button>
+            <button (click)="showPopup = false" class="cancel">Cancel</button>
+        </div>
+    </div>
+</div>

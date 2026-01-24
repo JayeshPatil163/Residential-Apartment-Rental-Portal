@@ -8,7 +8,15 @@ export class UnitsService {
 
     constructor(private http: HttpClient) {}
 
-    getUnits() {
-        return this.http.get<any[]>(`${this.api}/units`);
+    getUnits(towerId?: number) {
+        let url = `${this.api}/units`;
+        if (towerId) {
+            url += `?tower_id=${towerId}`;
+        }
+        return this.http.get<any[]>(url);
+    }
+
+    createUnit(data: any) {
+        return this.http.post(`${this.api}/units`, data);
     }
 }

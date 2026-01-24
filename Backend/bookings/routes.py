@@ -17,7 +17,7 @@ def get_bookings():
     return jsonify([
         {
             "id": b.id,
-            "unit_id": b.unit_id,
+            "unit_number": Unit.query.filter_by(id=b.unit_id).first().unit_number,
             "status": b.status,
             "created_at": b.created_at
         } for b in bookings

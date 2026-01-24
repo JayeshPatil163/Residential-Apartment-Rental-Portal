@@ -1,18 +1,19 @@
 <h1> Available Units </h1>
 
-<div *ngFor = "let unit of units$ | async" class="unit-card">
+<div *ngFor="let unit of units$ | async" class="unit-card">
     <h3> {{ unit.unit_number }} </h3>
     <p> Rent: ${{ unit.rent }} per month </p>
     <p> Unit Status : {{ unit.is_available ? 'Available' : 'Booked' }} </p>
+    <p> Tower : {{ unit.tower.name }} </p>
 
     <div *ngIf="unit.amenities?.length">
         <strong>Amenities:</strong>
         <ul>
             <li *ngFor="let amenity of unit.amenities">
-                {{ amenity }}
+                {{ amenity.name }}
             </li>
         </ul>
     </div>
 
-    <button (click)="bookUnit(unit.id)" [disabled] = "!unit.is_available"> Book Now </button>
+    <button (click)="bookUnit(unit.id)" [disabled]="!unit.is_available"> Book Now </button>
 </div>

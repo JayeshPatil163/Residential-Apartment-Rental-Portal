@@ -10,27 +10,44 @@ import { Router } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-    email: string = '';
-    password: string = '';
+  email: string = '';
+  password: string = '';
 
-    constructor(
-      private auth: AuthService,
-      private router: Router
-    ) {}
-
-    login() {
-      this.auth.login({
-        email: this.email,
-        password : this.password
-      }).subscribe({
-        next: (res: any) => {
-          console.log(res.access_token);
-          this.auth.setToken(res.access_token);
-          this.router.navigate(['/units']);
-        },
-        error: () => {
-          alert('Login failed. Please check your credentials.');
-        }
-      });
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) {
+   this.auth.checkExpiry().subscribe({
+    next: () => {
+      if(this.auth.getRole() == 'USER'){
+        this.router.navigate(['/units']);
+      }
+      else{
+        this.router.navigate(['/admin/dashboard']);
+      }
+    },
+    error: () => {
+      this.auth.logout();
     }
+   }) 
+  }
+
+  login() {
+    this.auth.login({
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: (res: any) => {
+        this.auth.setToken(res.access_token, res.role);
+        if (res.role === 'ADMIN') {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.router.navigate(['/units']);
+        }
+      },
+      error: () => {
+        alert('Login failed. Please check your credentials.');
+      }
+    });
+  }
 }

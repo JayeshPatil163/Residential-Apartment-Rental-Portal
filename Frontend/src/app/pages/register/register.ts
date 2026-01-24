@@ -10,28 +10,37 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './register.css',
 })
 export class Register {
-    name: string = '';
-    email: string = '';
-    password: string = '';
+  name: string = '';
+  email: string = '';
+  password: string = '';
 
-    constructor(
-      private auth: AuthService,
-      private router: Router
-    ) {}
-
-    register() {
-      this.auth.register({
-        name: this.name,
-        email: this.email,
-        password: this.password
-      }).subscribe({
-        next: (res) => {
-          alert('Registration successful! Please log in.');
-          this.router.navigate(['/login']);
-        },
-        error: () => {
-          alert('Registration failed. Please try again.');
-        }
-      })
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) {
+    if (this.auth.getToken()) {
+      if (this.auth.getRole() == 'USER') {
+        this.router.navigate(['/units']);
+      }
+      else {
+        this.router.navigate(['/admin/units']);
+      }
     }
+  }
+
+  register() {
+    this.auth.register({
+      name: this.name,
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: (res) => {
+        alert('Registration successful! Please log in.');
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        alert('Registration failed. Please try again.');
+      }
+    })
+  }
 }

@@ -1,16 +1,18 @@
 <h1> Admin Bookings </h1>
 
 <div *ngIf="bookings$ | async as bookings">
-    <div *ngIf="bookings.length === 0">
-      <p>No bookings found.</p>
-</div>
+  <div *ngIf="bookings.length === 0">
+    <p>No bookings found.</p>
+  </div>
 
-<div *ngFor="let booking of bookings" class="booking-card">
+  <div *ngFor="let booking of bookings" class="booking-card">
     <p><strong>User: </strong> {{ booking.user_id }} </p>
     <p><strong>Unit: </strong> {{ booking.unit_id }} </p>
     <p><strong>Status: </strong> {{ booking.status }} </p>
+    <p><strong>Created At: </strong> {{ booking.created_at }} </p>
 
-    <button
-     *ngIf="booking.status === 'PENDING'"
-     (click)="approveBooking(booking.id)">Approve</button>
+
+    <button *ngIf="booking.status === 'PENDING'" (click)="approveBooking(booking.id)">Approve</button>
+    <button *ngIf="booking.status === 'PENDING'" (click)="declineBooking(booking.id)">Decline</button>
+  </div>
 </div>

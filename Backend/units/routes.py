@@ -5,10 +5,16 @@ from utils.auth import role_required
 
 units_bp = Blueprint("units", __name__, url_prefix="/units")
 
-@units_bp.route("", methods=["GET"])
+@units_bp.route("", methods=["GET"], endpoint="get_units")
 def get_units():
-
-    units = Unit.query.all()
+    from flask import request
+    
+    tower_id = request.args.get("tower_id")
+    
+    if tower_id:
+        units = Unit.query.filter_by(tower_id=tower_id).all()
+    else:
+        units = Unit.query.all()
 
     return jsonify([
         {
@@ -17,11 +23,12 @@ def get_units():
             "bedrooms": u.bedrooms,
             "rent": u.rent,
             "is_available": u.is_available,
-            "amenities": [a.name for a in u.amenities]
+            "amenities": [{"id": a.id, "name": a.name} for a in u.amenities],
+            "tower": {"id": u.tower.id, "name": u.tower.name} if u.tower else None
         } for u in units
     ])
 
-@units_bp.route("/entry", methods=["POST"])
+@units_bp.route("", methods=["POST"], endpoint="create_unit")
 @role_required("ADMIN")
 @jwt_required()
 def create_unit():
@@ -37,8 +44,13 @@ def create_unit():
         unit_number=data["unit_number"],
         bedrooms=data["bedrooms"],
         rent=data["rent"],
-        is_available=data.get("is_available", True)
+        is_available=data.get("is_available", True),
+        tower_id=data.get("tower_id")
     )
+
+    if "amenities_ids" in data and len(data["amenities_ids"]) > 0:
+        from models.amenity import Amenity
+        unit.amenities.extend( Amenity.query.filter(Amenity.id.in_(data["amenities_ids"])).all())
 
     db.session.add(unit)
     db.session.commit()

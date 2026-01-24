@@ -1,7 +1,8 @@
 from flask import Flask, jsonify
 from config import Config
-from extensions import db, jwt
+from extensions import db, jwt, migrate
 from models.user import User
+from models.tower import Tower
 from models.unit import Unit
 from models.booking import Booking
 from models.amenity import Amenity
@@ -11,6 +12,7 @@ from units.routes import units_bp
 from bookings.routes import bookings_bp
 from admin.routes import admin_bp
 from amenity.routes import amenity_bp
+from towers.routes import towers_bp
 from flask_cors import CORS
 
 def create_app():
@@ -20,7 +22,7 @@ def create_app():
     CORS(app)
     CORS(
         app,
-        origins=["http://localhost:4200"],
+        origins=[Config.URL],
         supports_credentials=True
     )
 
@@ -30,12 +32,14 @@ def create_app():
     with app.app_context():
         db.create_all()
     jwt.init_app(app)
+    migrate.init_app(app, db)
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(units_bp)
     app.register_blueprint(bookings_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(amenity_bp)
+    app.register_blueprint(towers_bp)
 
     @app.route("/health")
     def health():

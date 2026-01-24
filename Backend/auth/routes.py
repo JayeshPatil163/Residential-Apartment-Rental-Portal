@@ -3,6 +3,7 @@ from extensions import db
 from models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
+from flask_jwt_extended import jwt_required
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -27,6 +28,12 @@ def register():
     db.session.commit()
     return jsonify({"message": "User registered successfully"}), 201
 
+@auth_bp.route("/check_expiry", methods=["GET"])
+@jwt_required()
+def check_expiry():
+    print("Token is valid")
+    return jsonify({"message": "Token is valid"}), 200
+
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
@@ -47,4 +54,6 @@ def login():
         }
     )
 
-    return jsonify({"access_token": token})
+    return jsonify({
+        "access_token": token,
+        "role" : user.role}),200

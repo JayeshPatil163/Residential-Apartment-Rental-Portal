@@ -1,14 +1,74 @@
-<h1> My Bookings </h1>
-
-<div *ngIf="bookings$ | async as bookings">
-    <div *ngIf="bookings.length === 0">
-        <p>No bookings yet.</p>
+<div class="my-bookings-container">
+    <div class="header-actions">
+        <h2>My Bookings</h2>
     </div>
 
-    <div *ngFor="let booking of bookings$ | async" class="booking-card">
-        <h3><strong>Unit: </strong> {{ booking.unit_number }} </h3>
-        <p><strong>Status: </strong>
-            <span [style.color]="booking.status === 'APPROVED' ? 'green' : booking.status === 'PENDING' ? 'orange' : 'red'">{{ booking.status }}</span>
-        </p>
-        <p> Created At : {{ booking.created_at }} </p>
-    </div>
+    <section class="booking-section">
+        <h3>Active Bookings</h3>
+        
+        <div *ngIf="approvedBookings$ | async as approved" class="bookings-grid">
+            <div *ngIf="approved.length === 0" class="empty-state">
+                <p>No active bookings.</p>
+            </div>
+
+            <div *ngFor="let booking of approved" class="booking-card active">
+                <div class="booking-header">
+                    <span class="unit-number">Unit {{ booking.unit_number }}</span>
+                    <span class="status-badge approved">Active</span>
+                </div>
+                
+                <div class="booking-details">
+                    <p class="detail-row">
+                        <span class="label">Date:</span>
+                        <span class="value">{{ booking.created_at | date }}</span>
+                    </p>
+                    <p class="detail-row">
+                        <span class="label">Payment Status:</span>
+                        <span [class]="'value status-text ' + (booking.payment_status === 'PAID' ? 'success' : 'pending')">
+                            {{ booking.payment_status || 'Pending' }}
+                        </span>
+                    </p>
+                </div>
+
+                <div class="card-actions">
+                    <button class="primary-btn sm pay-btn" *ngIf="booking.payment_status !== 'PAID'">
+                        Pay Rent
+                    </button>
+                    <button class="secondary-btn sm" *ngIf="booking.payment_status === 'PAID'" disabled>
+                        Paid
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="booking-section history-section">
+        <h3>Booking History & Requests</h3>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Unit</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="historyBookings$ | async as history">
+                    <tr *ngFor="let booking of history">
+                        <td>{{ booking.unit_number }}</td>
+                        <td>{{ booking.created_at | date }}</td>
+                        <td>
+                            <span [class]="'status-badge ' + booking.status.toLowerCase()">
+                                {{ booking.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="history.length === 0">
+                        <td colspan="3" class="text-center">No booking history.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

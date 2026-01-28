@@ -27,7 +27,7 @@ def get_all_bookings():
          "unit_id": Unit.query.get(b.unit_id).unit_number,
          "user_id": User.query.get(b.user_id).name,
          "status": b.status,
-         "payment_status": b.payment_status,
+         "payment_status": b.payment_status == "PAID" and "PAID" or "PENDING",
          "created_at": b.created_at,
          "tower": Unit.query.get(b.unit_id).tower_id,
       } for b in bookings
@@ -127,7 +127,7 @@ def get_dashboard_stats():
     total_revenue = db.session.query(func.sum(Unit.rent)).filter(Unit.is_available == False).scalar() or 0
     
 
-    payments = Booking.query.filter_by(status="APPROVED").order_by(Booking.created_at.desc()).limit(5).all()
+    payments = Booking.query.filter_by(status="APPROVED").order_by(Booking.created_at.desc()).all()
 
     recent_payments = []
     for payment in payments:

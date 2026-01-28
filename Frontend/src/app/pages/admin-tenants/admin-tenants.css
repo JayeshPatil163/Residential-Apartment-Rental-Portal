@@ -1,0 +1,42 @@
+h2 {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-lg);
+}
+
+.table-container {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    font-size: var(--font-size-sm);
+    margin-right: var(--spacing-xs);
+}
+
+.terminate-btn {
+    background-color: var(--error-color);
+    color: white;
+}
+.terminate-btn:hover { background-color: #DC2626; }
+
+.collect-btn {
+    background-color: #7ac86e;
+    color: white;
+    margin-right: 10px;
+}
+.collect-btn:hover { background-color: #228812; }
+
+.success {
+    color: var(--success-color);
+}
+.error {
+    color: var(--error-color);
+}
+

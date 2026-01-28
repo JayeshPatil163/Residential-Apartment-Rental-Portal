@@ -1,18 +1,82 @@
-<h1> Admin Bookings </h1>
+<div class="bookings-admin-container">
+    <div class="header-actions">
+        <h2>Manage Bookings</h2>
+    </div>
 
-<div *ngIf="bookings$ | async as bookings">
-  <div *ngIf="bookings.length === 0">
-    <p>No bookings found.</p>
-  </div>
+    <section class="booking-section">
+        <h3>Pending Requests</h3>
+        
+        <div *ngIf="pendingBookings$ | async as pending" class="bookings-grid">
+            <div *ngIf="pending.length === 0" class="empty-state">
+                <p>No pending requests.</p>
+            </div>
 
-  <div *ngFor="let booking of bookings" class="booking-card">
-    <p><strong>User: </strong> {{ booking.user_id }} </p>
-    <p><strong>Unit: </strong> {{ booking.unit_id }} </p>
-    <p><strong>Status: </strong> {{ booking.status }} </p>
-    <p><strong>Created At: </strong> {{ booking.created_at }} </p>
+            <div *ngFor="let booking of pending" class="booking-card pending">
+                <div class="booking-header">
+                    <span class="booking-id">#{{ booking.id }}</span>
+                    <span class="date">{{ booking.created_at | date }}</span>
+                </div>
+                
+                <div class="booking-details">
+                    <p class="detail-row">
+                        <span class="label">Tenant:</span>
+                        <span class="value">{{ booking.user_id }}</span>
+                    </p>
+                    <p class="detail-row">
+                        <span class="label">Unit:</span>
+                        <span class="value">{{ booking.unit_id }}</span>
+                    </p>
+                    <p class="detail-row">
+                        <span class="label">Tower:</span>
+                        <span class="value">{{ booking.tower }}</span>
+                    </p>
+                </div>
 
+                <div class="booking-actions">
+                    <button class="primary-btn sm approve-btn" (click)="approveBooking(booking.id)">Approve</button>
+                    <button class="secondary-btn sm decline-btn" (click)="declineBooking(booking.id)">Decline</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <button *ngIf="booking.status === 'PENDING'" (click)="approveBooking(booking.id)">Approve</button>
-    <button *ngIf="booking.status === 'PENDING'" (click)="declineBooking(booking.id)">Decline</button>
-  </div>
+    <section class="booking-section history-section">
+        <h3>Booking History</h3>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tenant</th>
+                        <th>Unit</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="historyBookings$ | async as history">
+                    <tr *ngFor="let booking of history">
+                        <td>#{{ booking.id }}</td>
+                        <td>{{ booking.user_id }}</td>
+                        <td>{{ booking.unit_id }} ({{ booking.tower }})</td>
+                        <td>{{ booking.created_at | date }}</td>
+                        <td>
+                            <span [class]="'status-badge ' + booking.status.toLowerCase()">
+                                {{ booking.status }}
+                            </span>
+                        </td>
+                        <td>
+                             <span [class]="'status-badge ' + (booking.payment_status === 'PAID' ? 'paid' : 'pending')">
+                                {{ booking.payment_status }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="history.length === 0">
+                        <td colspan="6" class="text-center">No booking history available.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>

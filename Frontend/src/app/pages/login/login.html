@@ -1,6 +1,7 @@
-<h1> Login Page </h1>
+<div class="login-container">
+<h2> Login Page </h2>
 
-<form #loginForm="ngForm" (ngSubmit) = "login()"> 
+<form class="form-group" #loginForm="ngForm" (ngSubmit) = "login()"> 
     <input 
         type="email"
         placeholder="Enter your email"
@@ -21,7 +22,8 @@
 
 </form> 
 
-<p>
+<p class="register-link">
     Don't have an account? 
-    <a routerLink="/regsiter"> Register here </a>
+    <a routerLink="/register"> Register here </a>
 </p>
+</div>

@@ -1,23 +1,42 @@
-<h1> Admin Amenities </h1>
-
-<div *ngIf="amenities$ | async as amenities">
-    <div *ngIf="amenities.length === 0">
-      <p>No amenities found.</p>
+<div class="admin-amenities-container">
+    <div class="header-actions">
+        <h2>Manage Amenities</h2>
+        <button class="primary-btn add-btn" (click)="showPopup = true">
+            <span class="icon">+</span> Add New Amenity
+        </button>
     </div>
 
-    <p><strong>No.</strong>Amenity Name </p>
-    <div *ngFor="let amenity of amenities$ | async" class="amenity-card">
-      <p><strong>{{ amenity.id }}</strong> {{ amenity.name }} </p>
+    <div *ngIf="amenities$ | async as amenities" class="amenities-grid">
+        <div *ngIf="amenities.length === 0" class="empty-state">
+            <p>No amenities found.</p>
+        </div>
+
+        <div *ngFor="let amenity of amenities" class="amenity-card">
+            <div class="amenity-info">
+                <h3>{{ amenity.name }}</h3>
+                <p>ID: {{ amenity.id }}</p>
+            </div>
+        </div>
     </div>
-    <button [disabled]="showPopup" (click)="showPopup = true">Add Amenity</button>
 
-    <div *ngIf="showPopup">
-      <div class="popup-content">
-        <h3>Add New Amenity</h3>
-        <input [(ngModel)]="newAmenityName" placeholder="Amenity Name">
+    <div class="modal-overlay" *ngIf="showPopup" (click)="showPopup = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Add New Amenity</h3>
+                <button class="close-btn" (click)="showPopup = false">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Amenity Name</label>
+                    <input [(ngModel)]="newAmenityName" placeholder="e.g. Swimming Pool" autofocus>
+                </div>
+            </div>
 
-        <button (click)="addAmenity(newAmenityName)">Save</button>
-        <button (click)="showPopup = false">Cancel</button>
-      </div>
+            <div class="modal-footer">
+                <button class="secondary-btn" (click)="showPopup = false">Cancel</button>
+                <button class="primary-btn" (click)="addAmenity(newAmenityName)">Save Amenity</button>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,19 +1,83 @@
-<h1> Available Units </h1>
-
-<div *ngFor="let unit of units$ | async" class="unit-card">
-    <h3> {{ unit.unit_number }} </h3>
-    <p> Rent: ${{ unit.rent }} per month </p>
-    <p> Unit Status : {{ unit.is_available ? 'Available' : 'Booked' }} </p>
-    <p> Tower : {{ unit.tower.name }} </p>
-
-    <div *ngIf="unit.amenities?.length">
-        <strong>Amenities:</strong>
-        <ul>
-            <li *ngFor="let amenity of unit.amenities">
-                {{ amenity.name }}
-            </li>
-        </ul>
+<div class="units-container">
+    <div class="header-actions">
+        <h2>Rent Your Dream Apartment</h2>
+        <div class="search-container">
+            <input type="text" placeholder="Search by Tower or Unit..." [(ngModel)]="searchTerm" class="search-input">
+        </div>
     </div>
 
-    <button (click)="bookUnit(unit.id)" [disabled]="!unit.is_available"> Book Now </button>
+    <section class="unit-section">
+        <h3>Available Apartments</h3>
+        
+        <div *ngIf="availableUnits$ | async as available" class="units-grid">
+            <div *ngIf="(available | filterUnits:searchTerm).length === 0" class="no-results">
+                <p>No apartments found matching your search.</p>
+            </div>
+
+            <div *ngFor="let unit of available | filterUnits:searchTerm" class="unit-card available">
+                <div class="unit-image">
+                    <span>Apartment {{ unit.unit_number }}</span>
+                </div>
+                
+                <div class="unit-details">
+                    <div class="unit-header">
+                        <span class="unit-number">{{ unit.unit_number }}</span>
+                        <span class="unit-price">${{ unit.rent }}/mo</span>
+                    </div>
+                    
+                    <div class="unit-info">
+                        <p>{{ unit.bedrooms }} Bedroom • {{ unit.tower.name }}</p>
+                    </div>
+
+                    <div class="unit-amenities" *ngIf="unit.amenities?.length">
+                        <span *ngFor="let amenity of unit.amenities" class="amenity-tag">
+                            {{ amenity.name }}
+                        </span>
+                    </div>
+
+                    <button class="primary-btn book-btn" (click)="bookUnit(unit.id)">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="unit-section booked-section">
+        <h3>Booked Units</h3>
+        
+        <div *ngIf="bookedUnits$ | async as booked" class="units-grid">
+             <div *ngIf="(booked | filterUnits:searchTerm).length === 0" class="empty-state">
+                <p>No booked units match your search.</p>
+            </div>
+
+            <div *ngFor="let unit of booked | filterUnits:searchTerm" class="unit-card booked">
+                <div class="unit-image grayscale">
+                    <span>{{ unit.unit_number }}</span>
+                </div>
+                
+                <div class="unit-details">
+                    <div class="unit-header">
+                        <span class="unit-number">{{ unit.unit_number }}</span>
+                        <span class="status-badge" style="background: #E5E7EB; color: #374151;">Booked</span>
+                    </div>
+                    
+                    <div class="unit-info">
+                        <p>{{ unit.bedrooms }} Bedroom • {{ unit.tower.name }}</p>
+                        <p>Rent: ${{ unit.rent }}/mo</p>
+                    </div>
+
+                    <div class="unit-amenities" *ngIf="unit.amenities?.length">
+                        <span *ngFor="let amenity of unit.amenities" class="amenity-tag">
+                            {{ amenity.name }}
+                        </span>
+                    </div>
+
+                    <button class="secondary-btn book-btn" disabled>
+                        Unavailable
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>

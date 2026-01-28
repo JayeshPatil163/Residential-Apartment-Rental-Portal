@@ -1,69 +1,123 @@
-<h1> Admin Units </h1>
-
-<div *ngFor="let unit of units$ | async" class="unit-card">
-  <h3> {{ unit.unit_number }} </h3>
-  <p> Tower : {{ unit.tower.name }} </p>
-  <p> Rent: ${{ unit.rent }} per month </p>
-  <p> Unit Status : {{ unit.is_available ? 'Available' : 'Booked' }} </p>
-
-  <div *ngIf="unit.amenities?.length">
-    <strong>Amenities:</strong>
-    <ul>
-      <li *ngFor="let amenity of unit.amenities">
-        {{ amenity.name }}
-      </li>
-    </ul>
-  </div>
-
-  <button (click)="toggleUnitId(unit)">
-    {{ selectedUnit === unit.id ? 'Close' : 'Add Amenities' }}
-  </button>
-
-  <div *ngIf="selectedUnit === unit.id">
-    <div class="amenities-container">
-      <label>Select Amenities:</label>
-      <div class="checkbox-group">
-        <div *ngFor="let amenity of amenities$ | async" class="amenity-item">
-          <input type="checkbox" [id]="'amenity-' + amenity.id" [value]="amenity.id"
-            [checked]="isAmenitySelected(unit, amenity.name)" (change)="onAmenityToggle(amenity.id, $event)">
-          <label [for]="'amenity-' + amenity.id">{{ amenity.name }}</label>
+<div class="units-admin-container">
+    <div class="header-actions">
+        <h2>Manage Units</h2>
+        <div class="actions-group">
+            <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" class="search-input">
+            <button class="primary-btn add-btn" (click)="openAddModal()">
+                <span class="icon">+</span> Add New Unit
+            </button>
         </div>
-      </div>
-    </div>
-    <button (click)="updateAmenities(unit.id)">Update</button>
-  </div>
-</div>
-
-<button [disabled]="showPopup" (click)="showPopup = true">Add Unit</button>
-
-<div *ngIf="showPopup">
-  <form (ngSubmit)="addUnit()">
-    <input type="text" placeholder="Enter unit number" [(ngModel)]="unit_number" name="unit_number" required />
-
-    <input type="number" placeholder="No. of bedrooms" [(ngModel)]="bedrooms" name="bedrooms" required />
-
-    <input type="number" placeholder="Enter rent amount" [(ngModel)]="rent" name="rent" required />
-
-    <div class="form-group" *ngIf="towers$ | async as towers">
-      <label>Select Tower:</label>
-      <select [(ngModel)]="selectedTowerId" name="tower" required>
-        <option [ngValue]="null" disabled>Select Tower</option>
-        <option *ngFor="let tower of towers" [ngValue]="tower.id">{{ tower.name }}</option>
-      </select>
     </div>
 
-    <div class="amenities-container">
-      <label>Select Amenities:</label>
-      <div class="checkbox-group">
-        <div *ngFor="let amenity of amenities$ | async" class="amenity-item">
-          <input type="checkbox" [id]="'amenity-' + amenity.id" [value]="amenity.id"
-            (change)="onAmenityToggle(amenity.id, $event)">
-          <label [for]="'amenity-' + amenity.id">{{ amenity.name }}</label>
+    <div class="admin-units-grid">
+        <div *ngFor="let unit of units$ | async | filterUnits:searchTerm" class="unit-card">
+            <div class="unit-header">
+                <span class="unit-number">{{ unit.unit_number }}</span>
+                <span [class]="'status-badge ' + (unit.is_available ? 'paid' : 'pending')">
+                    {{ unit.is_available ? 'Available' : 'Booked' }}
+                </span>
+            </div>
+            
+            <div class="unit-details">
+                <p class="detail-row">
+                    <span class="label">Tower:</span>
+                    <span class="value">{{ unit.tower.name }}</span>
+                </p>
+                <p class="detail-row">
+                    <span class="label">Rent:</span>
+                    <span class="value">${{ unit.rent }}/mo</span>
+                </p>
+                <p class="detail-row">
+                    <span class="label">Bedrooms:</span>
+                    <span class="value">{{ unit.bedrooms }} BHK</span>
+                </p>
+            </div>
+
+            <div class="amenities-section" *ngIf="unit.amenities?.length">
+                <div class="amenities-tags">
+                    <span *ngFor="let amenity of unit.amenities" class="amenity-tag">
+                        {{ amenity.name }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button class="secondary-btn" (click)="toggleUnitId(unit)">
+                    Manage Amenities
+                </button>
+            </div>
+
+            <div *ngIf="selectedUnit === unit.id" class="manage-amenities-panel">
+                <h4>Update Amenities</h4>
+                <div class="amenities-checklist">
+                    <div *ngFor="let amenity of amenities$ | async" class="checkbox-item">
+                        <input type="checkbox" 
+                               [id]="'unit-' + unit.id + '-amenity-' + amenity.id" 
+                               [value]="amenity.id"
+                               [checked]="isAmenitySelected(unit, amenity.name)" 
+                               (change)="onAmenityToggle(amenity.id, $event)">
+                        <label [for]="'unit-' + unit.id + '-amenity-' + amenity.id">{{ amenity.name }}</label>
+                    </div>
+                </div>
+                <div class="panel-actions">
+                    <button class="primary-btn sm" (click)="updateAmenities(unit.id)">Save Changes</button>
+                    <button class="text-btn sm" (click)="selectedUnit = null">Cancel</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <button type="submit"> Add Unit </button>
+    <div class="modal-overlay" *ngIf="showPopup" (click)="showPopup = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Add New Unit</h3>
+                <button class="close-btn" (click)="showPopup = false">&times;</button>
+            </div>
+            
+            <form (ngSubmit)="addUnit()">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Unit Number</label>
+                        <input type="text" [(ngModel)]="unit_number" name="unit_number" required placeholder="e.g. A-101" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Bedrooms</label>
+                        <input type="number" [(ngModel)]="bedrooms" name="bedrooms" required placeholder="Number of bedrooms" />
+                    </div>
 
-  </form>
+                    <div class="form-group">
+                        <label>Monthly Rent ($)</label>
+                        <input type="number" [(ngModel)]="rent" name="rent" required placeholder="Rent amount" />
+                    </div>
+
+                    <div class="form-group" *ngIf="towers$ | async as towers">
+                        <label>Tower</label>
+                        <select [(ngModel)]="selectedTowerId" name="tower" required>
+                            <option [ngValue]="null" disabled>Select Tower</option>
+                            <option *ngFor="let tower of towers" [ngValue]="tower.id">{{ tower.name }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Select Amenities</label>
+                    <div class="amenities-selection-grid">
+                        <div *ngFor="let amenity of amenities$ | async" class="checkbox-card">
+                            <input type="checkbox" 
+                                   [id]="'new-amenity-' + amenity.id" 
+                                   [value]="amenity.id"
+                                   (change)="onAmenityToggle(amenity.id, $event)">
+                            <label [for]="'new-amenity-' + amenity.id">{{ amenity.name }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="secondary-btn" (click)="showPopup = false">Cancel</button>
+                    <button type="submit" class="primary-btn">Create Unit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

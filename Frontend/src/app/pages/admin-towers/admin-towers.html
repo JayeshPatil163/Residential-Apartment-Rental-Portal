@@ -1,36 +1,68 @@
-<h1> Admin Towers </h1>
-
-<div *ngIf="towers$ | async as towers">
-    <div *ngIf="towers.length === 0">
-        <p>No towers found.</p>
+<div class="admin-towers-container">
+    <div class="header-actions">
+        <h2>Manage Towers</h2>
+        <button class="primary-btn add-btn" (click)="showPopup = true">
+            <span class="icon">+</span> Add New Tower
+        </button>
     </div>
 
-    <div *ngFor="let tower of towers" class="tower-card" (click)="viewUnits(tower.id)" [class.selected]="selectedTowerId === tower.id">
-        <p><strong>{{ tower.id }}.</strong> {{ tower.name }} </p>
+    <div *ngIf="towers$ | async as towers" class="towers-grid">
+        <div *ngIf="towers.length === 0" class="empty-state">
+            <p>No towers found.</p>
+        </div>
 
-        <div *ngIf="selectedTowerId === tower.id">
-            <hr>
-            <h4>Units in {{ tower.name }}</h4>
-            <div *ngIf="selectedTowerUnits$ | async as units; else loading">
-                 <div *ngIf="units.length === 0">No units in this tower.</div>
-                 <div *ngFor="let unit of units" class="unit-item">
-                     Unit {{ unit.unit_number }} - {{ unit.bedrooms }}BHK - ${{ unit.rent }}
-                 </div>
+        <div *ngFor="let tower of towers" class="tower-card" [class.active]="selectedTowerId === tower.id">
+            <div class="tower-header-content">
+                <div class="tower-icon">
+                    <span>🏢</span>
+                </div>
+                <div class="tower-info">
+                    <h3>{{ tower.name }}</h3>
+                    <p class="tower-id">Tower ID: {{ tower.id }}</p>
+                </div>
             </div>
-            <ng-template #loading>Loading units...</ng-template>
+            
+            <div class="card-actions">
+                <button class="secondary-btn" (click)="viewUnits(tower.id)">
+                    {{ selectedTowerId === tower.id ? 'Hide Units' : 'View Units' }}
+                </button>
+            </div>
+
+            <div *ngIf="selectedTowerId === tower.id" class="tower-units-panel">
+            <h4>Units in {{ tower.name }}</h4>
+                <div *ngIf="selectedTowerUnits$ | async as units; else loading" class="units-list-container">
+                     <div *ngIf="units.length === 0" class="no-units">No units in this tower.</div>
+                     <div *ngFor="let unit of units" class="unit-list-item">
+                         <span class="unit-badge">{{ unit.unit_number }}</span>
+                         <span class="unit-desc">{{ unit.bedrooms }} BHK</span>
+                         <span class="unit-price">${{ unit.rent }}</span>
+                     </div>
+                 </div>
+                <ng-template #loading>
+                    <div class="loading-state">Loading units...</div>
+                </ng-template>
+            </div>
         </div>
     </div>
+
+    <div class="modal-overlay" *ngIf="showPopup" (click)="showPopup = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Add New Tower</h3>
+                <button class="close-btn" (click)="showPopup = false">&times;</button>
 </div>
 
-<button [disabled]="showPopup" (click)="showPopup = true">Add Tower</button>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tower Name</label>
+                    <input [(ngModel)]="newTowerName" placeholder="e.g. Tower A" autofocus>
+                </div>
+            </div>
 
-<div *ngIf="showPopup" class="popup">
-    <div class="popup-content">
-        <h3>Add New Tower</h3>
-        <input [(ngModel)]="newTowerName" placeholder="Tower Name">
-        <div class="actions">
-            <button (click)="addTower()">Save</button>
-            <button (click)="showPopup = false" class="cancel">Cancel</button>
+            <div class="modal-footer">
+                <button class="secondary-btn" (click)="showPopup = false">Cancel</button>
+                <button class="primary-btn" (click)="addTower()">Create Tower</button>
+            </div>
         </div>
     </div>
 </div>

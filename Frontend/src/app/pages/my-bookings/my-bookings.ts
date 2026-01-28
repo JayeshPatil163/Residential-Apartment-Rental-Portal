@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { BookingService } from '../../services/bookings';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-my-bookings',
@@ -10,8 +11,9 @@ import { Observable } from 'rxjs';
   templateUrl: './my-bookings.html',
   styleUrl: './my-bookings.css',
 })
-export class MyBookings {
-  bookings$!: Observable<any[]>;
+export class MyBookings implements OnInit {
+  approvedBookings$!: Observable<any[]>;
+  historyBookings$!: Observable<any[]>;
 
   constructor(
     private http: HttpClient,
@@ -19,6 +21,14 @@ export class MyBookings {
   ) {}
 
   ngOnInit() {
-    this.bookings$ = this.bookingService.getBookings();
+    const allBookings$ = this.bookingService.getBookings();
+
+    this.approvedBookings$ = allBookings$.pipe(
+      map(bookings => bookings.filter(b => b.status === 'APPROVED'))
+    );
+
+    this.historyBookings$ = allBookings$.pipe(
+      map(bookings => bookings.filter(b => b.status !== 'APPROVED'))
+    );
   }
 }

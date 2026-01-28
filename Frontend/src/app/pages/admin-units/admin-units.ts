@@ -6,14 +6,16 @@ import { UnitsService } from '../../services/units';
 import { adminBookingService } from '../../services/admin';
 import { Amenity } from '../../services/amenity';
 import { TowerService } from '../../services/tower';
+import { FilterUnitsPipe } from '../../pipes/filter-units.pipe';
 
 @Component({
   selector: 'app-admin-units',
-  imports: [CommonModule, AsyncPipe, FormsModule],
+  imports: [CommonModule, AsyncPipe, FormsModule, FilterUnitsPipe],
   templateUrl: './admin-units.html',
   styleUrl: './admin-units.css',
 })
 export class AdminUnits {
+  searchTerm: string = '';
   units$!: Observable<any[]>;
   amenities$!: Observable<any[]>;
   towers$!: Observable<any[]>;
@@ -77,6 +79,16 @@ export class AdminUnits {
         alert('Failed to update amenities. Please try again.');
       }
     });
+  }
+
+  openAddModal() {
+    this.amenities_ids = [];
+    this.unit_number = '';
+    this.bedrooms = 0;
+    this.rent = 0;
+    this.selectedTowerId = null;
+    this.showPopup = true;
+    this.selectedUnit = null;
   }
 
   addUnit() {

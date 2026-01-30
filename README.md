@@ -80,6 +80,13 @@ RentEasy/
 
 ---
 
+## Important Links
+**Live Backend API :** [Backend](https://renteasy-backend-778432956795.us-central1.run.app)\
+**Live Frontend :** [Frontend](https://testing-380211.web.app)
+
+
+---
+
 ## Getting Started
 
 ### 1. Backend Setup (Docker)

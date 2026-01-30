@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from models.booking import Booking
 from models.unit import Unit
 from extensions import db
+from models.tower import Tower
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bookings_bp = Blueprint("bookings", __name__, url_prefix="/bookings")
@@ -18,8 +19,10 @@ def get_bookings():
         {
             "id": b.id,
             "unit_number": Unit.query.filter_by(id=b.unit_id).first().unit_number,
+            "tower_name": Tower.query.filter_by(id=Unit.query.filter_by(id=b.unit_id).first().tower_id).first().name,
             "status": b.status,
-            "created_at": b.created_at
+            "created_at": b.created_at,
+            "payment_status": b.payment_status
         } for b in bookings
     ])
 

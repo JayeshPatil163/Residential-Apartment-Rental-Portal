@@ -36,7 +36,6 @@ The project is divided into two main components:
 - **Authentication:** Secure Registration & Login (JWT)
 - **Browse Units:** View available apartments with pricing and details
 - **My Bookings:** Tenant dashboard to view lease status (Pending, Approved, Declined)
-- **Payments:** Simulate rent payments for active bookings
 
 ### Admin Features
 - **Dashboard:** System overview

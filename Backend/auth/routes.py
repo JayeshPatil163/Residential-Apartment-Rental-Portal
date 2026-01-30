@@ -31,7 +31,6 @@ def register():
 @auth_bp.route("/check_expiry", methods=["GET"])
 @jwt_required()
 def check_expiry():
-    print("Token is valid")
     return jsonify({"message": "Token is valid"}), 200
 
 
@@ -56,4 +55,6 @@ def login():
 
     return jsonify({
         "access_token": token,
-        "role" : user.role}),200
+        "role" : user.role,
+        "user_name": user.name,
+        "user_email": user.email}),200

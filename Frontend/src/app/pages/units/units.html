@@ -1,83 +1,135 @@
-<div class="units-container">
-    <div class="header-actions">
-        <h2>Rent Your Dream Apartment</h2>
-        <div class="search-container">
-            <input type="text" placeholder="Search by Tower or Unit..." [(ngModel)]="searchTerm" class="search-input">
-        </div>
-    </div>
-
-    <section class="unit-section">
-        <h3>Available Apartments</h3>
-        
-        <div *ngIf="availableUnits$ | async as available" class="units-grid">
-            <div *ngIf="(available | filterUnits:searchTerm).length === 0" class="no-results">
-                <p>No apartments found matching your search.</p>
+<div class="units-wrapper">
+        <aside class="filter-sidebar">
+            <div class="filter-group">
+                <h3>Flat Type</h3>
+                <div class="filter-options">
+                    <label class="checkbox-label" *ngFor="let type of ['1BHK', '2BHK', '3BHK', '4BHK']">
+                    <input type="checkbox" [(ngModel)]="tempFlatTypes[type]">
+                        <span>{{ type }}</span>
+                    </label>
+                </div>
             </div>
 
-            <div *ngFor="let unit of available | filterUnits:searchTerm" class="unit-card available">
-                <div class="unit-image">
-                    <span>Apartment {{ unit.unit_number }}</span>
+            <div class="filter-group">
+                <h3>Sorted By</h3>
+                <div class="filter-options">
+                    <label class="radio-label">
+                    <input type="radio" name="sort" value="rent_asc" [(ngModel)]="tempSortBy">
+                        <span style="min-width: 100px;">Rent Low to High</span>
+                    </label>
+                    <label class="radio-label">
+                    <input type="radio" name="sort" value="rent_desc" [(ngModel)]="tempSortBy">
+                        <span style="min-width: 100px;">Rent High to Low</span>
+                    </label>
+                    <label class="radio-label">
+                    <input type="radio" name="sort" value="availability_asc" [(ngModel)]="tempSortBy">
+                        <span style="min-width: 100px;">Flats Availability Low to High</span>
+                    </label>
+                    <label class="radio-label">
+                    <input type="radio" name="sort" value="availability_desc" [(ngModel)]="tempSortBy">
+                        <span style="min-width: 100px;">Flats Availability High to Low</span>
+                    </label>
                 </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Amenities</h3>
+                <div class="filter-options scrollable">
+                    <label class="checkbox-label" *ngFor="let amenity of amenities$ | async">
+                    <input type="checkbox" [(ngModel)]="tempAmenities[amenity.id]">
+                        <span style="min-width: 100px;">{{ amenity.name }}</span>
+                    </label>
+                </div>
+            </div>
+            
+            <button class="primary-btn apply-btn" (click)="applyFilters()">Explore</button>
+        </aside>
+
+        <main class="main-content">
+            <div class="header-actions">
+                <h2>Rent Your Dream Apartment</h2>
+                <div class="search-container">
+                    <input type="text" placeholder="Search by Tower or Unit..." [(ngModel)]="searchTerm" class="search-input">
+                </div>
+            </div>
+
+            <section class="unit-section">
+                <h3>Available Apartments</h3>
                 
-                <div class="unit-details">
-                    <div class="unit-header">
-                        <span class="unit-number">{{ unit.unit_number }}</span>
-                        <span class="unit-price">${{ unit.rent }}/mo</span>
-                    </div>
-                    
-                    <div class="unit-info">
-                        <p>{{ unit.bedrooms }} Bedroom • {{ unit.tower.name }}</p>
-                    </div>
+                <div *ngIf="availableUnits$ | async as available" class="units-grid">
+                    <ng-container *ngIf="(available | filterUnits:searchTerm | unitSortFilter:activeSortBy:activeFlatTypes:activeAmenities) as filteredList">
+                        <div *ngIf="filteredList.length === 0" class="no-results">
+                            <p>No apartments found matching your filters.</p>
+                        </div>
 
-                    <div class="unit-amenities" *ngIf="unit.amenities?.length">
-                        <span *ngFor="let amenity of unit.amenities" class="amenity-tag">
-                            {{ amenity.name }}
-                        </span>
-                    </div>
+                        <div *ngFor="let unit of filteredList" class="unit-card available">
+                            <div class="unit-image">
+                                <img [src]="unit.image_url" alt="Unit Image">
+                            </div>
+                            
+                            <div class="unit-details">
+                                <div class="unit-header">
+                                    <span class="unit-number">{{ unit.unit_number }}</span>
+                                    <span class="unit-price">${{ unit.rent }}/mo</span>
+                                </div>
+                                
+                                <div class="unit-info">
+                                    <p>{{ unit.bedrooms }} Bedroom • {{ unit.tower.name }}</p>
+                                </div>
 
-                    <button class="primary-btn book-btn" (click)="bookUnit(unit.id)">
-                        Book Now
-                    </button>
+                                <div class="unit-amenities" *ngIf="unit.amenities?.length">
+                                    <span *ngFor="let amenity of unit.amenities" class="amenity-tag">
+                                        {{ amenity.name }}
+                                    </span>
+                                </div>
+
+                                <button class="primary-btn book-btn" (click)="bookUnit(unit.id)">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <section class="unit-section booked-section">
-        <h3>Booked Units</h3>
-        
-        <div *ngIf="bookedUnits$ | async as booked" class="units-grid">
-             <div *ngIf="(booked | filterUnits:searchTerm).length === 0" class="empty-state">
-                <p>No booked units match your search.</p>
-            </div>
-
-            <div *ngFor="let unit of booked | filterUnits:searchTerm" class="unit-card booked">
-                <div class="unit-image grayscale">
-                    <span>{{ unit.unit_number }}</span>
-                </div>
+            <section class="unit-section booked-section">
+                <h3>Booked Units</h3>
                 
-                <div class="unit-details">
-                    <div class="unit-header">
-                        <span class="unit-number">{{ unit.unit_number }}</span>
-                        <span class="status-badge" style="background: #E5E7EB; color: #374151;">Booked</span>
-                    </div>
-                    
-                    <div class="unit-info">
-                        <p>{{ unit.bedrooms }} Bedroom • {{ unit.tower.name }}</p>
-                        <p>Rent: ${{ unit.rent }}/mo</p>
-                    </div>
+                <div *ngIf="bookedUnits$ | async as booked" class="units-grid">
+                <ng-container *ngIf="(booked | filterUnits:searchTerm | unitSortFilter:activeSortBy:activeFlatTypes:activeAmenities) as filteredBooked">
+                        <div *ngIf="filteredBooked.length === 0" class="empty-state">
+                            <p>No booked units match your search.</p>
+                        </div>
 
-                    <div class="unit-amenities" *ngIf="unit.amenities?.length">
-                        <span *ngFor="let amenity of unit.amenities" class="amenity-tag">
-                            {{ amenity.name }}
-                        </span>
-                    </div>
+                        <div *ngFor="let unit of filteredBooked" class="unit-card booked">
+                            <div class="unit-image grayscale">
+                                <img [src]="unit.image_url" alt="Unit Image">
+                            </div>
+                            
+                            <div class="unit-details">
+                                <div class="unit-header">
+                                    <span class="unit-number">{{ unit.unit_number }}</span>
+                                    <span class="booked-status">Booked</span>
+                                </div>
+                                
+                                <div class="unit-info">
+                                    <p>{{ unit.bedrooms }} Bedroom • {{ unit.tower.name }}</p>
+                                    <p>Rent: ${{ unit.rent }}/mo</p>
+                                </div>
 
-                    <button class="secondary-btn book-btn" disabled>
-                        Unavailable
-                    </button>
+                                <div class="unit-amenities" *ngIf="unit.amenities?.length">
+                                    <span *ngFor="let amenity of unit.amenities" class="amenity-tag">
+                                        {{ amenity.name }}
+                                    </span>
+                                </div>
+
+                                <button class="secondary-btn book-btn" disabled>
+                                    Unavailable
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
+        </main>
 </div>

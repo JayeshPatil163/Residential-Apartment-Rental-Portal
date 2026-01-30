@@ -1,28 +1,44 @@
-<h1>Tenants</h1>
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th>Tower</th>
-                <th>Unit Number</th>
-                <th>User Name</th>
-                <th>Rent Status</th>
-                <th>Created At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let booking of bookings$ | async">
-                <td>{{ booking.tower }}</td>
-                <td>{{ booking.unit_id }}</td>
-                <td>{{ booking.user_id }}</td>
-                <td [ngClass]="{ 'success': booking.payment_status === 'PAID', 'error': booking.payment_status === 'UNPAID' }">{{ booking.payment_status || 'Pending' }}</td>
-                <td>{{ booking.created_at }}</td>
-                <td>
-                    <button class="collect-btn" (click)="collectRent(booking.id)">Collect Rent</button>
-                    <button class="terminate-btn" (click)="terminate(booking.id)">Terminate</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="admin-tenants-container">
+    <div class="header-actions">
+        <h2>Manage Tenants</h2>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tower</th>
+                    <th>Unit Number</th>
+                    <th>User Name</th>
+                    <th>Rent Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let booking of bookings$ | async">
+                    <td class="tower-cell" [attr.data-tooltip]="booking.tower">
+                        <span class="value truncate">{{ booking.tower }}</span>
+                    </td>
+                    <td>
+                        <span class="badge">{{ booking.unit_id }}</span>
+                    </td>
+                    <td>
+                        <span class="value">{{ booking.user_id }}</span>
+                    </td>
+                    <td>
+                        <span [ngClass]="{ 'status-success': booking.payment_status === 'PAID', 'status-error': booking.payment_status === 'UNPAID' }">
+                            {{ booking.payment_status || 'Pending' }}
+                        </span>
+                    </td>
+                    <td>{{ booking.created_at }}</td>
+                    <td class="actions-cell">
+                        <button *ngIf="booking.payment_status !== 'PAID'" class="collect-btn" (click)="collectRent(booking.id)">Collect Rent</button>
+                        <button *ngIf="booking.payment_status === 'PAID'" class="collect-btn paid" disabled>Paid</button>
+                        <button class="terminate-btn" (click)="terminate(booking.id)">Terminate</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

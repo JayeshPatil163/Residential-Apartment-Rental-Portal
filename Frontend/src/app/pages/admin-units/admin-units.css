@@ -1,7 +1,90 @@
 .units-admin-container {
-    padding: var(--spacing-lg);
-    max-width: 1400px;
+    display: flex;
+    height: calc(100vh - 64px);
+    overflow: hidden;
+    position: relative;
+    background-color: var(--bg-color);
+}
+
+.main-content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-xl);
+    max-width: 1600px;
     margin: 0 auto;
+    width: 100%;
+    transition: margin-right 0.3s ease;
+}
+
+.sidebar-panel {
+    position: fixed;
+    top: 64px;
+    right: -400px;
+    width: 400px;
+    height: calc(100vh - 64px);
+    background: #fff;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.05);
+    transition: right 0.3s ease;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border-color);
+}
+
+.sidebar-panel.open {
+    right: 0;
+}
+
+.sidebar-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #fff;
+}
+
+.sidebar-title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    font-weight: 700;
+}
+
+.sidebar-header h4 {
+    margin: var(--spacing-xs) 0 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.sidebar-header p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-lg);
+}
+
+.sidebar-footer {
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+    background: #f9fafb;
+}
+
+.panel-actions {
+    display: flex;
+    gap: var(--spacing-md);
 }
 
 .header-actions {
@@ -9,6 +92,34 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-xl);
+}
+
+.checkbox-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.checkbox-card:hover {
+    background-color: #f3f4f6;
+}
+
+.checkbox-card input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkbox-card label {
+    font-size: var(--font-size-sm);
+    margin-bottom: 0;
+    min-width: 100px;
+    cursor: pointer;
+    flex: 1;
 }
 
 .actions-group {
@@ -21,7 +132,7 @@
     padding: 10px 16px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    min-width: 250px;
+    min-width: 500px;
     font-size: var(--font-size-base);
 }
 
@@ -31,6 +142,9 @@
 
 .add-btn {
     display: flex;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1;
     align-items: center;
     gap: var(--spacing-sm);
     padding: 10px 20px;
@@ -141,67 +255,6 @@
     width: 100%;
 }
 
-.manage-amenities-panel {
-    margin-top: var(--spacing-md);
-    padding: var(--spacing-md);
-    background-color: var(--bg-color);
-    border-radius: var(--radius-md);
-    animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.manage-amenities-panel h4 {
-    margin-top: 0;
-    margin-bottom: var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--text-color);
-}
-
-.amenities-checklist {
-    max-height: 150px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: var(--spacing-md);
-}
-
-.checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.checkbox-item label {
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 0;
-}
-
-.panel-actions {
-    display: flex;
-    gap: var(--spacing-sm);
-}
-
-.panel-actions button {
-    flex: 1;
-}
-
-.text-btn {
-    background: none;
-    border: 1px solid transparent;
-    color: var(--text-muted);
-}
-.text-btn:hover {
-    color: var(--text-color);
-    text-decoration: underline;
-}
-
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -287,16 +340,27 @@ form {
 .checkbox-card {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px;
-    border-radius: 4px;
-    background: var(--bg-color);
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s;
+}
+
+.checkbox-card:hover {
+    background-color: var(--bg-color);
+}
+
+.checkbox-card input {
+    margin: 0;
+    cursor: pointer;
 }
 
 .checkbox-card label {
     font-size: var(--font-size-sm);
     margin-bottom: 0;
     cursor: pointer;
+    color: var(--text-color);
+    flex: 1;
 }
 
 .modal-footer {

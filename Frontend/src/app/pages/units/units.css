@@ -1,7 +1,77 @@
+.units-wrapper {
+    display: flex;
+    width: 100%;
+    min-height: calc(100vh - 64px);
+    background-color: var(--bg-color);
+}
+
+.filter-sidebar {
+    width: 280px;
+    background: #fff;
+    padding: var(--spacing-lg);
+    border-right: 1px solid var(--border-color);
+    flex-shrink: 0;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: var(--spacing-xl);
+    max-width: 1600px;
+}
+
+.filter-group {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.filter-group:last-of-type {
+    border-bottom: none;
+}
+
+.filter-group h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-color);
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkbox-label, .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #4B5563;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label:hover, .radio-label:hover {
+    color: var(--primary-color);
+}
+
+.apply-btn {
+    width: 100%;
+    margin-top: auto;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
 .units-container {
-  padding: var(--spacing-lg) 0;
-  max-width: 1400px;
-  margin: 0 auto;
+  display: none;
 }
 
 h2 {
@@ -16,6 +86,13 @@ h2 {
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--spacing-lg);
+}
+
+.booked-status {
+    background-color: #f3f3f3;
+    padding: 4px 8px;
+    border-radius: 15px;
+    color: #374151;
 }
 
 .search-input {
@@ -81,12 +158,21 @@ h2 {
 
 .unit-image {
   height: 200px;
+  width: 100%;
   background-color: #e0e7ff;
+  overflow: hidden;
+  display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary-color);
-  font-weight: 600;
-  font-size: 1.25rem;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.unit-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .unit-image.grayscale {

@@ -39,7 +39,7 @@ export class Login {
       password: this.password
     }).subscribe({
       next: (res: any) => {
-        this.auth.setToken(res.access_token, res.role);
+        this.auth.setToken(res.access_token, res.role, res.user_name, res.user_email);
         if (res.role === 'ADMIN') {
           this.router.navigate(['/admin/dashboard']);
         } else {

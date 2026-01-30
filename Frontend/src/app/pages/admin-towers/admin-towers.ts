@@ -18,6 +18,7 @@ export class AdminTowers {
     selectedTowerId: number | null = null;
     newTowerName: string = '';
     showPopup = false;
+    selectedTowerName: string = '';
 
     constructor(private towerService: TowerService, private unitsService: UnitsService) {
     }
@@ -43,7 +44,7 @@ export class AdminTowers {
         });
     }
 
-    viewUnits(towerId: number) {
+    viewUnits(towerId: number, towerName: string) {
         if (this.selectedTowerId === towerId) {
             this.selectedTowerId = null;
             this.selectedTowerUnits$ = of([]);
@@ -51,5 +52,6 @@ export class AdminTowers {
         }
         this.selectedTowerId = towerId;
         this.selectedTowerUnits$ = this.unitsService.getUnits(towerId);
+        this.selectedTowerName = towerName;
     }
 }

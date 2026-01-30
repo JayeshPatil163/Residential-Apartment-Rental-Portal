@@ -29,7 +29,7 @@ def get_all_bookings():
          "status": b.status,
          "payment_status": b.payment_status == "PAID" and "PAID" or "PENDING",
          "created_at": b.created_at,
-         "tower": Unit.query.get(b.unit_id).tower_id,
+         "tower": Unit.query.get(b.unit_id).tower.name,
       } for b in bookings
    ])
 

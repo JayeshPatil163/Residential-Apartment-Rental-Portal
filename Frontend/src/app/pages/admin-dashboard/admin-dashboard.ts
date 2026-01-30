@@ -23,7 +23,6 @@ export class AdminDashboard implements OnInit {
   ngOnInit() {
     this.adminService.getDashboardStats().subscribe({
       next: (res) => {
-        console.log(res);
         this.stats = res;
         this.cdr.detectChanges();
       },

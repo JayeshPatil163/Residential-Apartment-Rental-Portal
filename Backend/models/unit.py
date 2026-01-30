@@ -8,6 +8,7 @@ class Unit(db.Model):
     bedrooms = db.Column(db.Integer)
     rent = db.Column(db.Float)
     is_available = db.Column(db.Boolean, default=True)
+    image_url = db.Column(db.String(500), nullable=True)
 
     amenities = db.relationship(
         "Amenity",
@@ -27,5 +28,6 @@ class Unit(db.Model):
             "is_available": self.is_available,
             "tower_name": self.tower.name if self.tower else "N/A",
             "tower_id": self.tower_id,
-            "amenities": [a.name for a in self.amenities]
+            "amenities": [a.name for a in self.amenities],
+            "image_url": self.image_url
         }

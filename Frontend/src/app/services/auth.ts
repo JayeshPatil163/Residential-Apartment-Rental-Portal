@@ -12,6 +12,10 @@ export class AuthService {
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private roleSubject = new BehaviorSubject<string | null>(localStorage.getItem('role'));
   public role$ = this.roleSubject.asObservable();
+  private nameSubject = new BehaviorSubject<string | null>(localStorage.getItem('user_name'));
+  public name$ = this.nameSubject.asObservable();
+  private emailSubject = new BehaviorSubject<string | null>(localStorage.getItem('user_email'));
+  public email$ = this.emailSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -27,11 +31,20 @@ export class AuthService {
     return this.http.post(`${this.api}/auth/register`, data);
   }
 
-  setToken(token: string, role: string) {
+  setToken(token: string, role: string, name: string, email: string) {
     localStorage.setItem('token', token);
     this.isAuthenticatedSubject.next(true);
     localStorage.setItem('role', role);
     this.roleSubject.next(role);
+    
+    if (name) {
+        localStorage.setItem('user_name', name);
+        this.nameSubject.next(name);
+    }
+    if (email) {
+        localStorage.setItem('user_email', email);
+        this.emailSubject.next(email);
+    }
   }
 
   getToken() {
@@ -47,6 +60,10 @@ export class AuthService {
     this.isAuthenticatedSubject.next(false);
     localStorage.removeItem('role');
     this.roleSubject.next(null);
+    localStorage.removeItem('user_name');
+    this.nameSubject.next(null);
+    localStorage.removeItem('user_email');
+    this.emailSubject.next(null);
     this.router.navigate(['/login']);
 
   }

@@ -24,7 +24,8 @@ def get_units():
             "rent": u.rent,
             "is_available": u.is_available,
             "amenities": [{"id": a.id, "name": a.name} for a in u.amenities],
-            "tower": {"id": u.tower.id, "name": u.tower.name} if u.tower else None
+            "tower": {"id": u.tower.id, "name": u.tower.name} if u.tower else None,
+            "image_url": u.image_url
         } for u in units
     ])
 
@@ -45,7 +46,8 @@ def create_unit():
         bedrooms=data["bedrooms"],
         rent=data["rent"],
         is_available=data.get("is_available", True),
-        tower_id=data.get("tower_id")
+        tower_id=data.get("tower_id"),
+        image_url=data.get("image_url")
     )
 
     if "amenities_ids" in data and len(data["amenities_ids"]) > 0:

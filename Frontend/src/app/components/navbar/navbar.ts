@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 export class NavbarComponent {
     isLoggedIn = false;
     role = 'USER';
+    userName: string | null = null;
+    userEmail: string | null = null;
 
     constructor(public auth: AuthService, private router: Router) {
         this.auth.isAuthenticated$.subscribe(status => {
@@ -20,6 +22,12 @@ export class NavbarComponent {
         });
         this.auth.role$.subscribe(role => {
             this.role = role || 'USER';
+        });
+        this.auth.name$.subscribe(name => {
+            this.userName = name;
+        });
+        this.auth.email$.subscribe(email => {
+            this.userEmail = email;
         });
     }
 

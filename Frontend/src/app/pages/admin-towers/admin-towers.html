@@ -1,47 +1,55 @@
 <div class="admin-towers-container">
-    <div class="header-actions">
-        <h2>Manage Towers</h2>
-        <button class="primary-btn add-btn" (click)="showPopup = true">
-            <span class="icon">+</span> Add New Tower
-        </button>
-    </div>
-
-    <div *ngIf="towers$ | async as towers" class="towers-grid">
-        <div *ngIf="towers.length === 0" class="empty-state">
-            <p>No towers found.</p>
+    <div class="main-content-area">
+        <div class="header-actions">
+            <h2>Manage Towers</h2>
+            <button class="primary-btn add-btn" (click)="showPopup = true">
+                <span class="icon">+</span> Add New Tower
+            </button>
         </div>
 
-        <div *ngFor="let tower of towers" class="tower-card" [class.active]="selectedTowerId === tower.id">
-            <div class="tower-header-content">
-                <div class="tower-icon">
-                    <span>🏢</span>
-                </div>
-                <div class="tower-info">
-                    <h3>{{ tower.name }}</h3>
-                    <p class="tower-id">Tower ID: {{ tower.id }}</p>
-                </div>
-            </div>
-            
-            <div class="card-actions">
-                <button class="secondary-btn" (click)="viewUnits(tower.id)">
-                    {{ selectedTowerId === tower.id ? 'Hide Units' : 'View Units' }}
-                </button>
+        <div *ngIf="towers$ | async as towers" class="towers-grid">
+            <div *ngIf="towers.length === 0" class="empty-state">
+                <p>No towers found.</p>
             </div>
 
-            <div *ngIf="selectedTowerId === tower.id" class="tower-units-panel">
-            <h4>Units in {{ tower.name }}</h4>
-                <div *ngIf="selectedTowerUnits$ | async as units; else loading" class="units-list-container">
-                     <div *ngIf="units.length === 0" class="no-units">No units in this tower.</div>
-                     <div *ngFor="let unit of units" class="unit-list-item">
-                         <span class="unit-badge">{{ unit.unit_number }}</span>
-                         <span class="unit-desc">{{ unit.bedrooms }} BHK</span>
-                         <span class="unit-price">${{ unit.rent }}</span>
-                     </div>
-                 </div>
-                <ng-template #loading>
-                    <div class="loading-state">Loading units...</div>
-                </ng-template>
+            <div *ngFor="let tower of towers" class="tower-card" [class.active]="selectedTowerId === tower.id">
+                <div class="tower-header-content">
+                    <div class="tower-icon">
+                        <span>🏢</span>
+                    </div>
+                    <div class="tower-info">
+                        <h3>{{ tower.name }}</h3>
+                        <p class="tower-id">Tower ID: {{ tower.id }}</p>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="secondary-btn" (click)="viewUnits(tower.id, tower.name)">
+                        {{ selectedTowerId === tower.id ? 'Hide Units' : 'View Units' }}
+                    </button>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="sidebar-panel" [class.open]="selectedTowerId !== null">
+        <div class="sidebar-header">
+            <h3>Units in {{ selectedTowerName }}</h3>
+            <button class="close-btn" (click)="selectedTowerId = null">&times;</button>
+        </div>
+        
+        <div class="sidebar-content" *ngIf="selectedTowerId !== null">
+            <div *ngIf="selectedTowerUnits$ | async as units; else loading" class="units-list-container">
+                 <div *ngIf="units.length === 0" class="no-units">No units in this tower.</div>
+                 <div *ngFor="let unit of units" class="unit-list-item">
+                     <span class="unit-badge">{{ unit.unit_number }}</span>
+                     <span class="unit-desc">{{ unit.bedrooms }} BHK</span>
+                     <span class="unit-price">${{ unit.rent }}</span>
+                 </div>
+             </div>
+            <ng-template #loading>
+                <div class="loading-state">Loading units...</div>
+            </ng-template>
         </div>
     </div>
 

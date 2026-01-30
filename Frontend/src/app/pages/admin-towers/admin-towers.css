@@ -1,7 +1,59 @@
 .admin-towers-container {
-    padding: var(--spacing-lg);
-    max-width: 1400px;
+    display: flex;
+    height: calc(100vh - 64px);
+    overflow: hidden;
+    position: relative;
+    background-color: var(--bg-color);
+}
+
+.main-content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-xl);
+    max-width: 1600px;
     margin: 0 auto;
+    width: 100%;
+    transition: margin-right 0.3s ease;
+}
+
+.sidebar-panel {
+    position: fixed;
+    top: 64px;
+    right: -400px;
+    width: 400px;
+    height: calc(100vh - 64px);
+    background: #fff;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.05);
+    transition: right 0.3s ease;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border-color);
+}
+
+.sidebar-panel.open {
+    right: 0;
+}
+
+.sidebar-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-lg);
 }
 
 .header-actions {
@@ -117,7 +169,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 100px;
+    max-height: 700px;
     overflow-y: auto;
 }
 

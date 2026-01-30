@@ -152,6 +152,59 @@ Frontend will be available at: `http://localhost:4200`
 
 ---
 
+## Screenshots
+
+### Login
+<img width="684" height="647" alt="login" src="https://github.com/user-attachments/assets/59f73821-5443-4958-a498-ef27d9ed5981" />
+
+### Register
+<img width="695" height="703" alt="register" src="https://github.com/user-attachments/assets/d0e872f6-c3ef-4257-a6bb-aa9a2d8fd9c3" />
+
+
+
+## Admin
+### Dashboard
+<img width="1710" height="985" alt="Dashboard" src="https://github.com/user-attachments/assets/b7943637-b275-48d3-bcbc-032c5f3c4d0e" />
+
+
+### Manage Units
+<img width="1710" height="984" alt="Admin units" src="https://github.com/user-attachments/assets/62c9afc2-578f-49bc-ba17-7647cf27b625" />
+
+
+### Manage Bookings
+<img width="1710" height="983" alt="Admin bookings" src="https://github.com/user-attachments/assets/24fa12b8-59b7-475a-b0d7-349ffa019589" />
+
+
+### Manage Amenities
+<img width="1710" height="985" alt="Admin aminities" src="https://github.com/user-attachments/assets/f34b724b-5bb8-4bb2-b75f-3ebb5934055d" />
+
+
+### Manage Towers
+<img width="1710" height="985" alt="Admin towers" src="https://github.com/user-attachments/assets/694c5e7b-5eba-4285-aae1-dbb2966fcf8d" />
+
+
+### Manage Tenants
+<img width="1710" height="984" alt="admin tenants" src="https://github.com/user-attachments/assets/ea250b6a-bec8-402a-b638-59d8ddd3bcb2" />
+
+
+
+
+## Public User
+### Units Available
+<img width="1710" height="1073" alt="units" src="https://github.com/user-attachments/assets/1d3447a2-8664-452b-afc9-fdcc13b8e503" />
+
+
+### Units Booked
+<img width="1710" height="1072" alt="units booked" src="https://github.com/user-attachments/assets/fafd860a-2d24-4383-be6b-88954dd676b3" />
+
+
+### Bookings
+<img width="1710" height="1072" alt="My-bookings" src="https://github.com/user-attachments/assets/7bf728cc-019f-42c7-8537-19c00d21160d" />
+
+
+
+---
+
 ## Security Notes
 - Passwords are stored as secure hashes (pbkdf2)
 - JWT tokens are required for protected routes

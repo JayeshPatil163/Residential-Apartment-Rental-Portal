@@ -16,7 +16,14 @@ with app.app_context():
             password_hash=generate_password_hash("admin123"),
             role="ADMIN"
         )
+        user = User(
+            name="User",
+            email="user@test.com",
+            password_hash=generate_password_hash("user123"),
+            role="USER"
+        )
         db.session.add(admin)
+        db.session.add(user)
 
     if Unit.query.count() == 0:
         units = [

@@ -110,7 +110,12 @@ Populate with demo data (Admin user, towers, units):
 ```bash
 docker exec -it renteasy_backend python seed.py
 ```
-*seed credentials: admin@test.com / admin123*
+
+**Demo credentials for admin and user:**\
+**seed Admin credentials:** `Username: admin@test.com / Password: admin123`\
+**seed User credentials:** `Username: user@test.com / Password: user123`
+
+
 
 ### 2. Frontend Setup (Angular)
 

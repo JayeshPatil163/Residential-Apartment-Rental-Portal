@@ -1,5 +1,5 @@
 # Residential-Apartment-Rental-Portal
-Kots world Project : Residential Apartment Rental Portal
+Residential Apartment Rental Portal
 
 # Overview
 
